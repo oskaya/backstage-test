@@ -1,9 +1,85 @@
+# -------------------------
+# DOMAIN
+# -------------------------
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: web-experiences
+  description: Domain for all web applications
+spec:
+  owner: user:default/oskaya
+
+---
+# -------------------------
+# SYSTEM
+# -------------------------
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: my-website
+  description: The complete My Website system including frontend and backend
+spec:
+  owner: user:default/oskaya
+  domain: web-experiences
+
+---
+# -------------------------
+# FRONTEND COMPONENT
+# -------------------------
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: my-website
-  description: my first catalog for backstage
+  name: my-website-frontend
+  description: Frontend application for My Website (static site hosted on S3)
 spec:
   type: website
+  lifecycle: production
   owner: user:default/oskaya
-  lifecycle: experimental
+  system: my-website
+  dependsOn:
+    - resource:default/my-website-frontend-s3
+
+---
+# -------------------------
+# BACKEND COMPONENT
+# -------------------------
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: my-website-backend
+  description: Backend service for My Website (running on EC2)
+spec:
+  type: service
+  lifecycle: production
+  owner: user:default/oskaya
+  system: my-website
+  dependsOn:
+    - resource:default/my-website-backend-ec2
+
+---
+# -------------------------
+# FRONTEND RESOURCE (S3)
+# -------------------------
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: my-website-frontend-s3
+  description: S3 bucket hosting the frontend static files
+spec:
+  type: s3-bucket
+  owner: user:default/oskaya
+  system: my-website
+
+---
+# -------------------------
+# BACKEND RESOURCE (EC2)
+# -------------------------
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: my-website-backend-ec2
+  description: EC2 instance running the backend service
+spec:
+  type: ec2-instance
+  owner: user:default/oskaya
+  system: my-website
