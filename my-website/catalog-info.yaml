@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: my-website
+  description: my first catalog for backstage
+spec:
+  type: website
+  owner: oskaya@windowslive.com
+  lifecycle: experimental
