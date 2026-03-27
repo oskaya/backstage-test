@@ -5,5 +5,5 @@ metadata:
   description: my first catalog for backstage
 spec:
   type: website
-  owner: guests
+  owner: user:default/oskaya
   lifecycle: experimental
