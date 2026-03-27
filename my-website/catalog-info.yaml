@@ -5,5 +5,5 @@ metadata:
   description: my first catalog for backstage
 spec:
   type: website
-  owner: oskaya@windowslive.com
+  owner: oskaya
   lifecycle: experimental
