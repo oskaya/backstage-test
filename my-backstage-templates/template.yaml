@@ -1,0 +1,51 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: s3-self-service
+  title: S3 Self Service
+  description: Create an S3 bucket with Backstage, GitHub Actions and Terraform
+spec:
+  owner: platform-team
+  type: service
+
+  parameters:
+    - title: Bucket info
+      required:
+        - name
+        - owner
+        - region
+      properties:
+        name:
+          title: Bucket Name
+          type: string
+          description: Must be globally unique
+        owner:
+          title: Owner
+          type: string
+          ui:field: OwnerPicker
+        region:
+          title: AWS Region
+          type: string
+          default: eu-west-1
+        env:
+          title: Environment
+          type: string
+          default: dev
+
+  steps:
+    - id: fetch-skeleton
+      name: Fetch skeleton
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: .
+        values:
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+          region: ${{ parameters.region }}
+          env: ${{ parameters.env }}
+
+  output:
+    text:
+      - title: Bucket
+        content: ${{ parameters.name }}
