@@ -2,23 +2,22 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: s3-self-service
-  title: S3 Self Service
-  description: Create an S3 bucket with Backstage, GitHub Actions and Terraform
+  title: S3 Self Service (Test)
+  description: Test repo creation with Terraform skeleton
 spec:
   owner: platform-team
   type: service
 
   parameters:
-    - title: Bucket info
+    - title: Bucket Info
       required:
         - name
         - owner
-        - region
       properties:
         name:
           title: Bucket Name
           type: string
-          description: Must be globally unique
+          description: Unique name for testing
         owner:
           title: Owner
           type: string
@@ -27,10 +26,6 @@ spec:
           title: AWS Region
           type: string
           default: eu-west-1
-        env:
-          title: Environment
-          type: string
-          default: dev
 
   steps:
     - id: fetch-skeleton
@@ -43,9 +38,18 @@ spec:
           name: ${{ parameters.name }}
           owner: ${{ parameters.owner }}
           region: ${{ parameters.region }}
-          env: ${{ parameters.env }}
+
+    - id: publish-github
+      name: Create GitHub repo
+      action: publish:github
+      input:
+        allowedHosts: ["github.com"]
+        repoUrl: github.com?repo=${{ parameters.name }}-s3-test&owner=oskaya
+        description: "S3 provisioning repo for ${{ parameters.name }}"
 
   output:
-    text:
-      - title: Bucket
-        content: ${{ parameters.name }}
+    links:
+      - title: GitHub Repo
+        url: ${{ steps.publish-github.output.remoteUrl }}
+      - title: Repo Files
+        url: ${{ steps.publish-github.output.repoContentsUrl }}
